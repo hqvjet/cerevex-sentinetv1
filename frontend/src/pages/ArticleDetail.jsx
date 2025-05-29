@@ -1,9 +1,40 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Clock12 } from "lucide-react"
+import { useParams } from "react-router-dom"
+import { API_URL } from "../utils/api"
+import { format } from "date-fns"
+import axios from "axios"
+
+const formatDate = (isoString) => {
+  return format(new Date(isoString), "dd/MM/yyyy • HH:mm")
+}
 
 export const ArticleDetail = () => {
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [feedback, setFeedback] = useState("");
+  const { articleId } = useParams()
+  const [article, setArticle] = useState(null)
+  const [articleTag, setArticleTag] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [feedback, setFeedback] = useState("")
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/api/v1/articles/get/${articleId}`)
+        setArticle(res.data)
+
+        const tagRes = await axios.get(`${API_URL}/api/v1/article-tags/article/${articleId}`)
+        setArticleTag(tagRes.data)
+
+        setLoading(false)
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin bài báo:", error)
+        setLoading(false)
+      }
+    }
+
+    fetchArticle()
+  }, [articleId])
 
   const handleToggleFeedback = () => {
     setShowFeedback((prev) => !prev)
@@ -15,18 +46,28 @@ export const ArticleDetail = () => {
     setShowFeedback(false)
   }
 
+  if (loading) {
+    return <div className="min-h-screen px-6 py-8">
+      <div role="status" className="max-w-5xl mx-auto animate-pulse">
+        <div class="h-96 bg-gray-200 rounded-3xl overflow-hidden dark:bg-gray-700"></div>
+      </div>
+    </div>
+  }
+
+  if (!article) return <div className="p-4 text-center">Không tìm thấy bài viết.</div>
+
   return (
     <div className="min-h-screen px-6 py-8">
       <div className="max-w-5xl mx-auto bg-[#f8f3ea] rounded-[32px] border-1 border-[#2625223D] shadow-md p-6">
         <div className="text-center mb-4">
           <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full uppercase tracking-wide">
-            Sports
+            {articleTag?.[0]?.name || "undefind"}
           </span>
           <h1 className="text-3xl md:text-4xl font-bold mt-4 uppercase">
-            Đội tuyển quốc gia Việt Nam giành chức vô địch
+            {article.title}
           </h1>
           <p className="flex items-center justify-center text-sm text-gray-500 mt-2">
-            <Clock12 className="me-2"/> 20 July 2021
+            <Clock12 className="me-2"/> {formatDate(article.created_at)}
           </p>
         </div>
 
@@ -38,16 +79,7 @@ export const ArticleDetail = () => {
 
         <div className="space-y-4 text-gray-700 leading-relaxed text-sm">
           <p>
-            Picture succulent chicken infused with the bright notes of lemon
-            and the aromatic richness of garlic...
-          </p>
-          <p>
-            As you preheat your oven, envision the kitchen filling with the
-            tantalizing aromas...
-          </p>
-          <p>
-            This recipe goes beyond the basics, inviting you to savor the
-            richness...
+            {article.content}
           </p>
         </div>
 

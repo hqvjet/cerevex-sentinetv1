@@ -13,7 +13,7 @@ function App() {
           <Routes>
             <Route index element={<Home/>}/>
             <Route path="/create-article" element={<CreateArticle/>}/>
-            <Route path="/view-article" element={<ArticleDetail/>}/>
+            <Route path="/view-article/:articleId" element={<ArticleDetail/>}/>
           </Routes>
         </div>
       </BrowserRouter>
