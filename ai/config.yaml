@@ -1,3 +1,6 @@
+project:
+  use_gdrive: False # --------> Use Google Drive for training with RL
+
 data:
   ag_news: "wangrongsheng/ag_news"
 
@@ -8,7 +11,7 @@ input:
 finetune:
   name: "bert-base-uncased"
   batch_size: 16
-  learning_rate: 0.00002
+  learning_rate: 0.0002
   epochs: 3
   save_model_path: "model/"
 
@@ -19,11 +22,14 @@ training:
   gpu_device: 0
 
 rl_training:
-  episode: 5000
-  learning_rate: 0.000005
-  num_data: 1250
+  num_epoch: 1000 # Epoch
+  batch_size: 5000 # Batch size = num_data * 4 ----> 5000
+  mini_batch_size: 256 # Update policy for each mini batch -----> 256
+  max_chunk_length: 128 # Sentence length
+  learning_rate: 0.00005
+  discount_y: 0.95
   clip_ratio: 0.2
-  SFT_model_path: "model/checkpoint-3"
+  SFT_model_path: "model/checkpoint-22500"
   k: 5
   action_read: 0
   action_predict: 1
