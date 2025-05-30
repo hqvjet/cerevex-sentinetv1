@@ -46,3 +46,9 @@ CREATE TABLE ArticleTag (
     FOREIGN KEY (article_id) REFERENCES Article(id),
     FOREIGN KEY (tag_id) REFERENCES Tag(id)
 );
+
+CREATE TABLE Collecter (
+    id SERIAL PRIMARY KEY,
+    content TEXT,
+    label VARCHAR(50),
+)
