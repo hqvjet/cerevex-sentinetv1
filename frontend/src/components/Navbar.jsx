@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, Link } from "react-router-dom"
 import { Search } from "lucide-react"
 
 export const Navbar = () => {
@@ -17,7 +17,7 @@ export const Navbar = () => {
         <button className="p-2 rounded-2xl bg-[#26252214] shadow">
           <Search />
         </button>
-        <button className="px-4 py-2 bg-black text-white text-sm rounded-full cursor-pointer hover:opacity-75">Sign Up</button>
+        <Link to="/sign-up" className="px-4 py-2 bg-black text-white text-sm rounded-full cursor-pointer hover:opacity-75">Sign Up</Link>
       </div>
     </header>
   )

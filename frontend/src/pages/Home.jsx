@@ -5,6 +5,7 @@ import axios from "axios"
 
 export const Home = () => {
   const [articles, setArticles] = useState([])
+  const [connect, setConnect] = useState(true)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export const Home = () => {
       .catch((err) => {
         console.error("Lỗi khi lấy danh sách bài viết:", err)
         setLoading(false)
+        setConnect(false)
       })
   }, [])
 
@@ -31,6 +33,8 @@ export const Home = () => {
   }
 
   if (!articles) return <div className="text-center mt-4 text-red-500">Articles not found.</div>
+
+  if (!connect) return <div className="text-center mt-4 text-red-500">Disconnect to server.</div>
 
   return (
     <div className="min-h-screen px-6 py-8">
