@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS Tag;
 DROP TABLE IF EXISTS Comment;
 DROP TABLE IF EXISTS Article;
 DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Collector;
 
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
@@ -16,7 +17,6 @@ CREATE TABLE Users (
 CREATE TABLE Article (
     id SERIAL PRIMARY KEY,
     user_id INT,
-    model_id INT,
     title VARCHAR(255),
     content TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -47,8 +47,8 @@ CREATE TABLE ArticleTag (
     FOREIGN KEY (tag_id) REFERENCES Tag(id)
 );
 
-CREATE TABLE Collecter (
+CREATE TABLE collector (
     id SERIAL PRIMARY KEY,
     content TEXT,
-    label VARCHAR(50),
+    label VARCHAR(50)
 )
