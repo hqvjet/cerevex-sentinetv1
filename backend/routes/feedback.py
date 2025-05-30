@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/feedback", tags=["AI Feedback"])
+router = APIRouter(tags=["AI Feedback"])
 
 class Feedback(BaseModel):
     article_id: int

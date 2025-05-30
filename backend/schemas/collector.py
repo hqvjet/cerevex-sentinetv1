@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
-class CollecterCreate(BaseModel):
+class CollectorCreate(BaseModel):
     content: str
     label: str
 
-class CollecterResponse(BaseModel):
+class CollectorResponse(BaseModel):
     id: int
     content: str
     label: str

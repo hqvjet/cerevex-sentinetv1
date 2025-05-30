@@ -1,10 +1,10 @@
 from psycopg import AsyncConnection
-from schemas.collecter import CollecterCreate
+from schemas.collector import CollectorCreate
 
 
-async def save_collecter(db: AsyncConnection, data: CollecterCreate):
+async def save_collector(db: AsyncConnection, data: CollectorCreate):
     query = """
-        INSERT INTO collecter (content, label)
+        INSERT INTO collector (content, label)
         VALUES (%s, %s)
         RETURNING id, content, label
     """
@@ -15,10 +15,10 @@ async def save_collecter(db: AsyncConnection, data: CollecterCreate):
             return {"id": row[0], "content": row[1], "label": row[2]}
     return None
 
-async def get_all_collecter(db: AsyncConnection):
+async def get_all_collector(db: AsyncConnection):
     query = """
         SELECT id, content, label
-        FROM collecter
+        FROM collector
     """
     async with db.cursor() as cur:
         await cur.execute(query)

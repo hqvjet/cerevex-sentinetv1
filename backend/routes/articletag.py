@@ -4,7 +4,7 @@ from models.database import get_db_conn
 from schemas.articletag import ArticleTagCreate, ArticleTagResponse
 from models import articletag as articletag_model
 
-router = APIRouter(prefix="/article-tags", tags=["article-tags"])
+router = APIRouter(prefix="/article-tags", tags=["ArticleTags"])
 
 @router.post("/", response_model=ArticleTagResponse)
 async def create_article_tag(
