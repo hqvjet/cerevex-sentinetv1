@@ -2,6 +2,9 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
+class TagCreate(BaseModel):
+    name: str
+
 class ArticleCreate(BaseModel):
     user_id: int
     title: Optional[str]
@@ -24,6 +27,8 @@ class ArticleResponse(BaseModel):
     title: Optional[str]
     content: Optional[str]
     created_at: datetime
+
+    tag: Optional[str] = None
 
     class Config:
         from_attributes = True

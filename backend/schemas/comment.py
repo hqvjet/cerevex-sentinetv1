@@ -14,7 +14,7 @@ class CommentUpdate(BaseModel):
 class CommentResponse(BaseModel):
     id: int
     article_id: int
-    user_id: int
+    name: str
     content: str
     sentiment: Optional[str] = None 
     created_at: Optional[datetime] = None
