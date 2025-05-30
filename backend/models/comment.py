@@ -22,7 +22,7 @@ async def create_comment(db: AsyncConnection, comment: CommentCreate):
 
 async def get_all_comments(db: AsyncConnection):
     query = """SELECT c.id, u.name, c.article_id, c.content, c.sentiment, c.created_at
-        FROM comment m 
+        FROM comment c 
         LEFT JOIN users u ON c.user_id = u.id"""
     async with db.cursor() as cur:
         await cur.execute(query)
@@ -39,23 +39,24 @@ async def get_all_comments(db: AsyncConnection):
 async def get_comments_by_article(db: AsyncConnection, aritcle_id: int):
     query = """
         SELECT c.id, u.name, c.article_id, c.content, c.sentiment, c.created_at
-        FROM comment m 
+        FROM comment c
         LEFT JOIN users u ON c.user_id = u.id
         WHERE article_id = %s
     """
     async with db.cursor() as cur:
         await cur.execute(query, (aritcle_id,))
-        rows = cur.fetchall()
+        rows = await cur.fetchall()
         comments = []
         for row in rows:
             comments.append({
                 "id":row[0],
                 "name":row[1],
-                "aritcle_id": row[2],
+                "article_id": row[2],
                 "content":row[3],
                 "sentiment":row[4],
                 "created_at":row[5]
             })
+        return comments
 
 async def delete_comment(db: AsyncConnection, comment_id: int):
     query = """DELETE FROM Comment WHERE id = %s RETURNING id"""
