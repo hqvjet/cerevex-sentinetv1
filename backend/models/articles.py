@@ -75,7 +75,8 @@ async def get_all_articles(conn: AsyncConnection) -> list[ArticleResponse]:
             user_id=row[1],
             title=row[2],
             content=row[3],
-            created_at=row[4]
+            created_at=row[4],
+            tag=row[5]
         ) for row in rows]
         return articles
 

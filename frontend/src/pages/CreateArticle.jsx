@@ -34,7 +34,19 @@ export const CreateArticle = () => {
     setMessage("")
     
     try {
-      const response = await axios.post(`${API_URL}/api/v1/articles/create`, formData)
+      // const getLabel = await axios.post("https://9198-34-142-239-202.ngrok-free.app/api/v1/predict",
+      //   { content: formData.content }
+      // )
+      const getLabel = {
+        "label": "sports",
+        "pred_time": 0.009066581726074219
+      }
+      const updatedFormData = {
+        ...formData,
+        tag: getLabel.label
+      }
+      
+      const response = await axios.post(`${API_URL}/api/v1/articles/create`, updatedFormData)
       setMessage("✅ Bài viết đã được tạo thành công!")
       setFormData({ user_id: user.id, tag: "", title: "", content: "" })
     } catch (error) {
