@@ -3,6 +3,10 @@ import { Clock12 } from "lucide-react"
 import { useParams } from "react-router-dom"
 import { API_URL } from "../utils/api"
 import { format } from "date-fns"
+import { useAuth } from "../context/AuthContext"
+import { Link } from "react-router-dom"
+import { ThumbsUp } from 'lucide-react'
+import { ThumbsDown } from 'lucide-react'
 import axios from "axios"
 
 const formatDate = (isoString) => {
@@ -11,11 +15,13 @@ const formatDate = (isoString) => {
 
 export const ArticleDetail = () => {
   const { articleId } = useParams()
+  const { user } = useAuth()
   const [article, setArticle] = useState(null)
   const [articleTag, setArticleTag] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showFeedback, setShowFeedback] = useState(false)
   const [feedback, setFeedback] = useState("")
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -46,6 +52,8 @@ export const ArticleDetail = () => {
     setShowFeedback(false)
   }
 
+  const toggle = () => setShow(prev => !prev)
+
   if (loading) {
     return <div className="min-h-screen px-6 py-8">
       <div role="status" className="max-w-5xl mx-auto animate-pulse">
@@ -54,7 +62,17 @@ export const ArticleDetail = () => {
     </div>
   }
 
-  if (!article) return <div className="p-4 text-center">Không tìm thấy bài viết.</div>
+  if (!user) return <div className="flex items-center justify-center mt-10">
+    <div className="w-full max-w-md text-center px-4">
+      <p className="text-red-600 text-lg mb-4">Please sign in to view article!</p>
+      <Link
+        to="/sign-in"
+        className="bg-black text-white text-sm px-6 py-2 rounded-full hover:opacity-75"
+      >
+        Sign In
+      </Link>
+    </div>
+  </div>
 
   return (
     <div className="min-h-screen px-6 py-8">
@@ -70,12 +88,6 @@ export const ArticleDetail = () => {
             <Clock12 className="me-2"/> {formatDate(article.created_at)}
           </p>
         </div>
-
-        <img
-          src="https://i.imgur.com/HvErS5v.png"
-          alt="Football Team"
-          className="w-full rounded-lg object-cover my-4"
-        />
 
         <div className="space-y-4 text-gray-700 leading-relaxed text-sm">
           <p>
@@ -101,12 +113,42 @@ export const ArticleDetail = () => {
           <button className="mt-4 md:mt-0 bg-white border text-sm border-gray-300 px-6 py-2 rounded-full hover:bg-gray-100">
             Read More
           </button>
-          <button 
-            className="mt-4 md:mt-0 bg-black text-white text-sm px-6 py-2 rounded-full hover:opacity-75"
-            onClick={handleToggleFeedback}
-          >
-            Comment
-          </button>
+          <div className="flex space-x-2">
+            <button className="inline-flex items-center justify-center w-10 h-10 rounded-full border-1 border-[#2625223D] bg-[#e9e9e980] hover:opacity-75 transition duration-200 cursor-pointer">
+              <ThumbsUp className="text-gray-700 w-5 h-5"/>
+            </button>
+            <div className="relative inline-block text-left">
+              {/* Button trigger */}
+              <button
+                type="button"
+                onClick={toggle}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border-1 border-[#2625223D] bg-[#e9e9e980] hover:opacity-75 transition duration-200 cursor-pointer"
+                title="Reactions"
+              >
+                <ThumbsDown className="text-gray-700 w-5 h-5"/>
+              </button>
+
+              {/* Dropdown content */}
+              {show && (
+                <div className="origin-top-right absolute right-0 mt-2 w-40 rounded-xl shadow-lg bg-white ring-1 ring-black/5 z-50 animate-fade-in">
+                  <div className="py-1">
+                    <Link
+                      to="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors duration-150"
+                    >
+                      #TagName
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+            <button 
+              className="mt-4 md:mt-0 bg-black text-white text-sm px-6 py-2 rounded-full hover:opacity-75"
+              onClick={handleToggleFeedback}
+            >
+              Comment
+            </button>
+          </div>
         </div>
 
         {showFeedback && (
@@ -115,7 +157,7 @@ export const ArticleDetail = () => {
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               rows={4}
-              placeholder="Enter your feedback..."
+              placeholder="Enter your comment..."
               className="w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:ring-black"
             />
             <button

@@ -24,10 +24,8 @@ export const Home = () => {
 
   if (loading) {
     return <div className="min-h-screen px-6 py-8">
-      <div role="status" className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-pulse">
-        <div class="max-w-xs h-80 bg-gray-200 rounded-3xl overflow-hidden dark:bg-gray-700"></div>
-        <div class="max-w-xs h-80 bg-gray-200 rounded-3xl overflow-hidden dark:bg-gray-700"></div>
-        <div class="max-w-xs h-80 bg-gray-200 rounded-3xl overflow-hidden dark:bg-gray-700"></div>
+      <div role="status" className="max-w-5xl mx-auto grid grid-cols-2 gap-6 animate-pulse">
+        <div class="max-w h-32 bg-gray-200 rounded-3xl overflow-hidden dark:bg-gray-700"></div>
       </div>
     </div>
   }
@@ -38,7 +36,7 @@ export const Home = () => {
 
   return (
     <div className="min-h-screen px-6 py-8">
-      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="max-w-5xl mx-auto grid grid-cols-2 gap-6">
         {articles.map((article) => (
           <ArticleCard
             key={article.id}

@@ -1,10 +1,13 @@
 import { useState } from "react"
 import { API_URL } from "../utils/api"
+import { useAuth } from "../context/AuthContext"
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 export const CreateArticle = () => {
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
-    user_id: 1,
+    user_id: user.id,
     model_id: 1,
     title: "",
     content: "",
@@ -35,6 +38,18 @@ export const CreateArticle = () => {
       setLoading(false)
     }
   }
+
+  if (!user) return <div className="flex items-center justify-center mt-10">
+    <div className="w-full max-w-md text-center px-4">
+      <p className="text-red-600 text-lg mb-4">Please sign in to create article!</p>
+      <Link
+        to="/sign-in"
+        className="bg-black text-white text-sm px-6 py-2 rounded-full hover:opacity-75"
+      >
+        Sign In
+      </Link>
+    </div>
+  </div>
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-[#f8f3ea] border-1 border-[#2625223D] shadow-md rounded-[32px] mt-6">

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { API_URL } from "../utils/api"
 import axios from "axios"
 
 export const SignUp = () => {
@@ -17,15 +18,22 @@ export const SignUp = () => {
     }))
   }
 
-  const handleSubmit = () => {
-
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      await axios.post(`${API_URL}/api/v1/users/create`, formData)
+      alert("Registration success! Please Sign in.")
+    } catch (error) {
+      alert("Registration failed!")
+      console.error(error)
+    }
   }
   
   return (
     <div className="h-screen flex">
       <form onSubmit={handleSubmit} className="px-6 py-8 max-w-md m-auto bg-[#f8f3ea] border-1 border-[#2625223D] shadow-md rounded-[32px]">
-        <img src="../../public/images/my_logo.png" className="w-2/7 h-2/7 mx-auto" alt="image description"/>
-        <h2 className="text-[18px] font-semibold mb-4 text-start">Sign up for an account</h2>
+        <img src="/images/my_logo.png" className="w-2/7 h-2/7 mx-auto" alt="image description"/>
+        <h2 className="text-[18px] font-semibold mb-2 text-start">Sign up for an account</h2>
         <input 
           type="text" 
           name="username" 
