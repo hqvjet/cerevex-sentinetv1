@@ -43,6 +43,7 @@ export const Home = () => {
             id={article.id}
             title={article.title}
             date={article.created_at}
+            tag={article.tag}
           />
         ))}
       </div> 

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { NavLink, Link } from "react-router-dom"
 import { Search } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
@@ -6,6 +6,19 @@ import { useAuth } from "../context/AuthContext"
 export const Navbar = () => {
   const [show, setShow] = useState(false)
   const { user, logout } = useAuth()
+  const dropdownRef = useRef(null)
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShow(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const linkClass = ({ isActive }) => isActive ? "font-bold text-black border-b-2 border-[#EE6352]" : ""
   const toggle = () => setShow(prev => !prev)
@@ -26,7 +39,7 @@ export const Navbar = () => {
           <Search />
         </button>
         {user ? 
-          <div className="relative inline-block text-left">
+          <div className="relative inline-block text-left" ref={dropdownRef}>
             <div>
               <button
                 type="button"

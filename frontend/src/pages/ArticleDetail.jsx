@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Clock12 } from "lucide-react"
 import { useParams } from "react-router-dom"
 import { API_URL } from "../utils/api"
@@ -17,21 +17,17 @@ export const ArticleDetail = () => {
   const { articleId } = useParams()
   const { user } = useAuth()
   const [article, setArticle] = useState(null)
-  const [articleTag, setArticleTag] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showFeedback, setShowFeedback] = useState(false)
   const [feedback, setFeedback] = useState("")
   const [show, setShow] = useState(false)
+  const dropdownRef = useRef(null)
 
   useEffect(() => {
     const fetchArticle = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/v1/articles/get/${articleId}`)
         setArticle(res.data)
-
-        const tagRes = await axios.get(`${API_URL}/api/v1/article-tags/article/${articleId}`)
-        setArticleTag(tagRes.data)
-
         setLoading(false)
       } catch (error) {
         console.error("Lỗi khi lấy thông tin bài báo:", error)
@@ -41,6 +37,18 @@ export const ArticleDetail = () => {
 
     fetchArticle()
   }, [articleId])
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShow(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const handleToggleFeedback = () => {
     setShowFeedback((prev) => !prev)
@@ -79,7 +87,7 @@ export const ArticleDetail = () => {
       <div className="max-w-5xl mx-auto bg-[#f8f3ea] rounded-[32px] border-1 border-[#2625223D] shadow-md p-6">
         <div className="text-center mb-4">
           <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full uppercase tracking-wide">
-            {articleTag?.[0]?.name || "undefind"}
+            {article.tag || "undefind"}
           </span>
           <h1 className="text-3xl md:text-4xl font-bold mt-4 uppercase">
             {article.title}
@@ -117,7 +125,7 @@ export const ArticleDetail = () => {
             <button className="inline-flex items-center justify-center w-10 h-10 rounded-full border-1 border-[#2625223D] bg-[#e9e9e980] hover:opacity-75 transition duration-200 cursor-pointer">
               <ThumbsUp className="text-gray-700 w-5 h-5"/>
             </button>
-            <div className="relative inline-block text-left">
+            <div className="relative inline-block text-left" ref={dropdownRef}>
               {/* Button trigger */}
               <button
                 type="button"

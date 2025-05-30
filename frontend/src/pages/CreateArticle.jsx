@@ -1,19 +1,25 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { API_URL } from "../utils/api"
 import { useAuth } from "../context/AuthContext"
-import axios from "axios"
 import { Link } from "react-router-dom"
+import axios from "axios"
 
 export const CreateArticle = () => {
   const { user } = useAuth()
   const [formData, setFormData] = useState({
-    user_id: user.id,
-    model_id: 1,
+    user_id: "",
+    tag: "",
     title: "",
     content: "",
   })
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({ ...prev, user_id: user.id }))
+    }
+  }, [user])
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -30,7 +36,7 @@ export const CreateArticle = () => {
     try {
       const response = await axios.post(`${API_URL}/api/v1/articles/create`, formData)
       setMessage("✅ Bài viết đã được tạo thành công!")
-      setFormData({ user_id: 1, model_id: 1, title: "", content: "" })
+      setFormData({ user_id: user.id, tag: "", title: "", content: "" })
     } catch (error) {
       console.error(error);
       setMessage("Đã có lỗi xảy ra khi tạo bài viết.")
@@ -52,7 +58,7 @@ export const CreateArticle = () => {
   </div>
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-[#f8f3ea] border-1 border-[#2625223D] shadow-md rounded-[32px] mt-6">
+    <div className="max-w-3xl mx-auto p-6 bg-[#f8f3ea] border-1 border-[#2625223D] shadow-md rounded-[32px] mt-8">
       <h2 className="text-3xl font-bold mb-4">Create New Article</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
